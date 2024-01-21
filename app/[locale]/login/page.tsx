@@ -39,7 +39,7 @@ export default async function Login({
   const handleGoogleSignIn = async () => {
     "use server";
 
-    const { user, session, error } = await supabase.auth.signIn({
+    const { user, session, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
     });
 
