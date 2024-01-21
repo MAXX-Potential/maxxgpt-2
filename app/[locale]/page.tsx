@@ -26,11 +26,12 @@ export default function HomePage() {
   return (
     <div className="flex h-screen w-screen flex-col items-center justify-center">
       <div className="mb-5"> 
-      {theme === "dark" ? 
+      <img src="/LIGHT_BRAND_LOGO.png" alt="MAXX Potential Logo" style={{ height: '200px', width: 'auto' }} />  
+      {/* {theme === "dark" ? 
           <img src="/DARK_BRAND_LOGO.png" alt="MAXX Potential Logo" style={{ height: '200px', width: 'auto' }} /> : 
           <img src="/LIGHT_BRAND_LOGO.png" alt="MAXX Potential Logo" style={{ height: '200px', width: 'auto' }} />  
            
-        }
+        } */}
       </div>
 
       <div className="text-4xl font-bold">GPT</div>
