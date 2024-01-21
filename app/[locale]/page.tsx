@@ -10,8 +10,14 @@ export default function HomePage() {
 
   return (
     <div className="flex h-screen w-screen flex-col items-center justify-center">
-      <div>
+      {/* <div>
         <ChatbotUISVG theme={theme === "dark" ? "dark" : "light"} scale={0.3} />
+      </div> */}
+      <div>
+        {theme === "dark" ? 
+          <img src="public/DARK_BRAND_LOGO.png" alt="MAXX Potential Logo" style={{ transform: 'scale(0.3)' }} /> : 
+          <img src="public/LIGHT_BRAND_LOGO.png" alt="MAXX Potential Logo" style={{ transform: 'scale(0.3)' }} />
+        }
       </div>
 
       <div className="mt-2 text-4xl font-bold">MAXX GPT</div>
