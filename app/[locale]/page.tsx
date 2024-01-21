@@ -12,16 +12,8 @@ export default function HomePage() {
   //     {/* <div>
   //       <ChatbotUISVG theme={theme === "dark" ? "dark" : "light"} scale={0.3} />
   //     </div> */}
-  //     <div style={{ transform: 'scale(0.3)' }}>
-  //       {theme === "dark" ? 
-  //         <img src="/DARK_BRAND_LOGO.png" alt="MAXX Potential Logo" style={{ transform: 'scale(0.3)' }} /> : 
-  //         <img src="/LIGHT_BRAND_LOGO.png" alt="MAXX Potential Logo" style={{ transform: 'scale(0.3)' }} />
-  //       }
-  //     </div>
-
   //     {/* <div className="mt-2 text-4xl font-bold">MAXX GPT</div> */}
   //     <div className="mt-2 text-4xl font-bold">GPT</div>
-
   //     <Link
   //       className="mt-4 flex w-[200px] items-center justify-center rounded-md bg-blue-500 p-2 font-semibold"
   //       href="/chat"
@@ -35,8 +27,8 @@ export default function HomePage() {
     <div className="flex h-screen w-screen flex-col items-center justify-center">
       <div className="mb-5"> 
         {theme === "dark" ? 
-          <img src="/DARK_BRAND_LOGO.png" alt="MAXX Potential Logo" style={{ height: '200px', width: 'auto' }} /> : 
-          <img src="/LIGHT_BRAND_LOGO.png" alt="MAXX Potential Logo" style={{ height: '200px', width: 'auto' }} />
+          <img src="/LIGHT_BRAND_LOGO.png" alt="MAXX Potential Logo" style={{ height: '200px', width: 'auto' }} /> : 
+          <img src="/DARK_BRAND_LOGO.png" alt="MAXX Potential Logo" style={{ height: '200px', width: 'auto' }} /> 
         }
       </div>
 
