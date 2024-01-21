@@ -36,10 +36,10 @@ export default async function Login({
     return redirect("/chat")
   }
 
-  async function handleGoogleSignIn() {
+  async function handleGoogleSignIn(){
     "use server";
 
-    await supabase.auth.signInWithOAuth({
+    const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
     });
 
