@@ -8,20 +8,40 @@ import Link from "next/link"
 export default function HomePage() {
   const { theme } = useTheme()
 
+  // return (
+  //   <div className="flex h-screen w-screen flex-col items-center justify-center">
+  //     {/* <div>
+  //       <ChatbotUISVG theme={theme === "dark" ? "dark" : "light"} scale={0.3} />
+  //     </div> */}
+  //     <div style={{ transform: 'scale(0.3)' }}>
+  //       {theme === "dark" ? 
+  //         <img src="/DARK_BRAND_LOGO.png" alt="MAXX Potential Logo" style={{ transform: 'scale(0.3)' }} /> : 
+  //         <img src="/LIGHT_BRAND_LOGO.png" alt="MAXX Potential Logo" style={{ transform: 'scale(0.3)' }} />
+  //       }
+  //     </div>
+
+  //     {/* <div className="mt-2 text-4xl font-bold">MAXX GPT</div> */}
+  //     <div className="mt-2 text-4xl font-bold">GPT</div>
+
+  //     <Link
+  //       className="mt-4 flex w-[200px] items-center justify-center rounded-md bg-blue-500 p-2 font-semibold"
+  //       href="/chat"
+  //     >
+  //       Start Chatting
+  //       <IconArrowRight className="ml-1" size={20} />
+  //     </Link>
+  //   </div>
+  // )
   return (
     <div className="flex h-screen w-screen flex-col items-center justify-center">
-      {/* <div>
-        <ChatbotUISVG theme={theme === "dark" ? "dark" : "light"} scale={0.3} />
-      </div> */}
-      {/* <div> */}
+      <div className="mb-5"> {/* Adjust bottom margin here */}
         {theme === "dark" ? 
-          <img src="/DARK_BRAND_LOGO.png" alt="MAXX Potential Logo" style={{ transform: 'scale(0.3)' }} /> : 
-          <img src="/LIGHT_BRAND_LOGO.png" alt="MAXX Potential Logo" style={{ transform: 'scale(0.3)' }} />
+          <img src="/DARK_BRAND_LOGO.png" alt="MAXX Potential Logo" className="h-20 w-auto" /> : 
+          <img src="/LIGHT_BRAND_LOGO.png" alt="MAXX Potential Logo" className="h-20 w-auto" />
         }
-      {/* </div> */}
+      </div>
 
-      {/* <div className="mt-2 text-4xl font-bold">MAXX GPT</div> */}
-      <div className="mt-2 text-4xl font-bold">GPT</div>
+      <div className="text-4xl font-bold">GPT</div>
 
       <Link
         className="mt-4 flex w-[200px] items-center justify-center rounded-md bg-blue-500 p-2 font-semibold"
