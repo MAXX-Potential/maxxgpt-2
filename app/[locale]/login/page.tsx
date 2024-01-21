@@ -36,20 +36,6 @@ export default async function Login({
     return redirect("/chat")
   }
 
-  async function handleGoogleSignIn(){
-    "use server";
-
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-    });
-
-    if (error) {
-      return redirect(`/login?message=${error.message}`);
-    }
-
-    return redirect("/chat");
-  };
-
   const signIn = async (formData: FormData) => {
     "use server"
 
@@ -171,12 +157,6 @@ export default async function Login({
           Sign Up
         </Button>
 
-        <Button
-          onClick={handleGoogleSignIn}
-          className="mb-2 rounded-md bg-red-600 px-4 py-2 text-white"
-        >
-          Sign in with Google
-        </Button>
 
         <div className="text-muted-foreground mt-1 flex justify-center text-sm">
           <span className="mr-1">Forgot your password?</span>
