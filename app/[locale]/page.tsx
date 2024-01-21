@@ -7,7 +7,6 @@ import Link from "next/link"
 
 export default function HomePage() {
   const { theme } = useTheme()
-  <link rel="icon" href="/favicon.png" />
   // return (
   //   <div className="flex h-screen w-screen flex-col items-center justify-center">
   //     {/* <div>
