@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { FC } from "react"
-import { ChatbotUISVG } from "../icons/chatbotui-svg"
+// import { ChatbotUISVG } from "../icons/chatbotui-svg"
 
 interface BrandProps {
   theme?: "dark" | "light"
@@ -16,8 +16,14 @@ export const Brand: FC<BrandProps> = ({ theme = "dark" }) => {
       target="_blank"
       rel="noopener noreferrer"
     >
-      <div className="mb-2">
-        <ChatbotUISVG theme={theme === "dark" ? "dark" : "light"} scale={0.3} />
+      {/* <div className="mb-2">
+        // <ChatbotUISVG theme={theme === "dark" ? "dark" : "light"} scale={0.3} />
+      </div> */}
+      <div className="mb-2"> 
+        {theme === "dark" ? 
+          <img src="/DARK_BRAND_LOGO.png" alt="MAXX Potential Logo" style="height: 200px; width: auto;" /> : 
+          <img src="/LIGHT_BRAND_LOGO.png" alt="MAXX Potential Logo" style="height: 200px; width: auto;" />
+        }
       </div>
 
       <div className="text-4xl font-bold tracking-wide">MAXX GPT</div>

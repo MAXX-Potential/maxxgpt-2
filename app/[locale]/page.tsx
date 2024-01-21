@@ -1,13 +1,13 @@
 "use client"
 
-import { ChatbotUISVG } from "@/components/icons/chatbotui-svg"
+// import { ChatbotUISVG } from "@/components/icons/chatbotui-svg"
 import { IconArrowRight } from "@tabler/icons-react"
 import { useTheme } from "next-themes"
 import Link from "next/link"
 
 export default function HomePage() {
   const { theme } = useTheme()
-
+  <link rel="icon" href="/favicon.png" />
   // return (
   //   <div className="flex h-screen w-screen flex-col items-center justify-center">
   //     {/* <div>
@@ -34,10 +34,10 @@ export default function HomePage() {
   // )
   return (
     <div className="flex h-screen w-screen flex-col items-center justify-center">
-      <div className="mb-5"> {/* Adjust bottom margin here */}
+      <div className="mb-5"> 
         {theme === "dark" ? 
-          <img src="/DARK_BRAND_LOGO.png" alt="MAXX Potential Logo" className="h-20 w-auto" /> : 
-          <img src="/LIGHT_BRAND_LOGO.png" alt="MAXX Potential Logo" className="h-20 w-auto" />
+          <img src="/DARK_BRAND_LOGO.png" alt="MAXX Potential Logo" style="height: 200px; width: auto;" /> : 
+          <img src="/LIGHT_BRAND_LOGO.png" alt="MAXX Potential Logo" style="height: 200px; width: auto;" />
         }
       </div>
 
