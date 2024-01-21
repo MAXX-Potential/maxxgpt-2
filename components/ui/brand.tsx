@@ -21,8 +21,8 @@ export const Brand: FC<BrandProps> = ({ theme = "dark" }) => {
       </div> */}
       <div className="mb-2"> 
         {theme === "dark" ? 
-          <img src="/DARK_BRAND_LOGO.png" alt="MAXX Potential Logo" style="height: 200px; width: auto;" /> : 
-          <img src="/LIGHT_BRAND_LOGO.png" alt="MAXX Potential Logo" style="height: 200px; width: auto;" />
+          <img src="/DARK_BRAND_LOGO.png" alt="MAXX Potential Logo" style={{ height: '200px', width: 'auto' }} /> : 
+          <img src="/LIGHT_BRAND_LOGO.png" alt="MAXX Potential Logo" style={{ height: '200px', width: 'auto' }} />
         }
       </div>
 
