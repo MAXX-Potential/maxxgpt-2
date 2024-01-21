@@ -10,7 +10,7 @@ export const ThemeSwitcher: FC<ThemeSwitcherProps> = () => {
   const { setTheme, theme } = useTheme()
 
   const handleChange = (theme: "dark" | "light") => {
-    // localStorage.setItem("theme", theme)
+    localStorage.setItem("theme", theme)
 
     setTheme(theme)
   }

@@ -35,7 +35,7 @@ import {
 } from "../ui/sheet"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs"
 import { TextareaAutosize } from "../ui/textarea-autosize"
-import { ThemeSwitcher } from "./theme-switcher"
+// import { ThemeSwitcher } from "./theme-switcher"
 
 interface ProfileSettingsProps {}
 
@@ -704,7 +704,7 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
 
         <div className="mt-6 flex items-center">
           <div className="flex items-center space-x-1">
-            <ThemeSwitcher />
+            {/* <ThemeSwitcher /> */}
 
             <WithTooltip
               display={
