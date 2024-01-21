@@ -21,7 +21,7 @@ export const WorkspaceStep: FC<WorkspaceStepProps> = ({
 }) => {
   return (
     <>
-      <div className="space-y-1">
+      {/* <div className="space-y-1">
         <Label>
           How would you like the AI to respond in your home workspace?
         </Label>
@@ -40,7 +40,7 @@ export const WorkspaceStep: FC<WorkspaceStepProps> = ({
           used={workspaceInstructions.length}
           limit={WORKSPACE_INSTRUCTIONS_MAX}
         />
-      </div>
+      </div> */}
 
       <ChatSettingsForm
         chatSettings={defaultChatSettings}

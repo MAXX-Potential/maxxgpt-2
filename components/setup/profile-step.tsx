@@ -172,7 +172,7 @@ export const ProfileStep: FC<ProfileStepProps> = ({
         />
       </div>
 
-      <div className="space-y-1">
+      {/* <div className="space-y-1">
         <Label>
           What would you like the AI to know about you to provide better
           responses?
@@ -192,7 +192,7 @@ export const ProfileStep: FC<ProfileStepProps> = ({
           used={profileContext.length}
           limit={PROFILE_CONTEXT_MAX}
         />
-      </div>
+      </div> */}
     </>
   )
 }
