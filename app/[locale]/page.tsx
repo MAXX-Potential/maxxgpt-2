@@ -13,14 +13,15 @@ export default function HomePage() {
       {/* <div>
         <ChatbotUISVG theme={theme === "dark" ? "dark" : "light"} scale={0.3} />
       </div> */}
-      <div>
+      {/* <div> */}
         {theme === "dark" ? 
-          <img src="public/DARK_BRAND_LOGO.png" alt="MAXX Potential Logo" style={{ transform: 'scale(0.3)' }} /> : 
-          <img src="public/LIGHT_BRAND_LOGO.png" alt="MAXX Potential Logo" style={{ transform: 'scale(0.3)' }} />
+          <img src="/DARK_BRAND_LOGO.png" alt="MAXX Potential Logo" style={{ transform: 'scale(0.3)' }} /> : 
+          <img src="/LIGHT_BRAND_LOGO.png" alt="MAXX Potential Logo" style={{ transform: 'scale(0.3)' }} />
         }
-      </div>
+      {/* </div> */}
 
-      <div className="mt-2 text-4xl font-bold">MAXX GPT</div>
+      {/* <div className="mt-2 text-4xl font-bold">MAXX GPT</div> */}
+      <div className="mt-2 text-4xl font-bold">GPT</div>
 
       <Link
         className="mt-4 flex w-[200px] items-center justify-center rounded-md bg-blue-500 p-2 font-semibold"
