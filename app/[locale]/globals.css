@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+.bg-maxxgrey {
+  background-color: #40403f !important;
+}
+.bg-maxxblue {
+  background-color: #1084c7 !important;
+}
+
 ::-webkit-scrollbar-track {
   background-color: transparent;
 }
@@ -102,3 +109,4 @@
     @apply bg-background text-foreground;
   }
 }
+

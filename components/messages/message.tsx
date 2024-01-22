@@ -132,7 +132,7 @@ export const Message: FC<MessageProps> = ({
       className={cn(
         "flex w-full justify-center",
         // message.role === "user" ? "" : "bg-secondary"
-        message.role === "user" ? "maxxblue" : "maxxgrey"
+        message.role === "user" ? "bg-maxxblue" : "bg-maxxgrey"
       )}
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
