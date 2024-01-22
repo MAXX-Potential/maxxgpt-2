@@ -37,7 +37,7 @@ export default function HomePage() {
       <div className="text-4xl font-bold">GPT</div>
 
       <Link
-        className="mt-4 flex w-[200px] items-center justify-center rounded-md bg-blue-500 p-2 font-semibold"
+        className="mt-4 flex w-[200px] items-center justify-center rounded-md bg-maxxblue p-2 font-semibold"
         href="/chat"
       >
         Start Chatting

@@ -146,7 +146,7 @@ export default async function Login({
           placeholder="••••••••"
         />
 
-        <Button className="mb-2 rounded-md bg-blue-700 px-4 py-2 text-white">
+        <Button className="mb-2 rounded-md bg-maxxblue px-4 py-2 text-white">
           Login
         </Button>
 
