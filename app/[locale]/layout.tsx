@@ -24,8 +24,7 @@ export const metadata: Metadata = {
   title: {
     template: "%s - MAXX GPT",
     default: "MAXX GPT"
-  }, 
-  favicon: "/favicon.png"
+  }
 }
 
 const i18nNamespaces = ["translation"]
