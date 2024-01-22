@@ -43,6 +43,10 @@ export default function ChatPage() {
             <ChatInput />
           </div>
 
+          <div className="max-w-[300px] truncate sm:max-w-[400px] md:max-w-[500px] lg:max-w-[600px] xl:max-w-[700px]">
+            <a href="https://docs.google.com/document/d/1YCNEwqLADxFQyzLHpMBhowaZOqzTOJn_sr1eWE93sAQ/edit?usp=sharing" target="_blank">MAXX Potential AI/LLM Policy</a>
+          </div>
+
           <div className="absolute bottom-2 right-2 hidden md:block lg:bottom-4 lg:right-4">
             <ChatHelp />
           </div>

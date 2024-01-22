@@ -229,7 +229,7 @@ export const ChatUI: FC<ChatUIProps> = ({}) => {
         <ChatInput />
       </div>
 
-      <div className="relative w-[300px] items-end pb-8 pt-5 sm:w-[400px] md:w-[500px] lg:w-[660px] xl:w-[800px]">
+      <div className="max-w-[300px] truncate sm:max-w-[400px] md:max-w-[500px] lg:max-w-[600px] xl:max-w-[700px]">
         <a href="https://docs.google.com/document/d/1YCNEwqLADxFQyzLHpMBhowaZOqzTOJn_sr1eWE93sAQ/edit?usp=sharing" target="_blank">MAXX Potential AI/LLM Policy</a>
       </div>
 
