@@ -4,6 +4,7 @@
 import { IconArrowRight } from "@tabler/icons-react"
 import { useTheme } from "next-themes"
 import Link from "next/link"
+import Head from "next/head"
 
 export default function HomePage() {
   const { theme } = useTheme()
@@ -24,6 +25,7 @@ export default function HomePage() {
   //   </div>
   // )
   return (
+    <Head><link rel="icon" href="/favicon.png" /></Head>
     <div className="flex h-screen w-screen flex-col items-center justify-center">
       <div className="mb-5"> 
       <img src="/LIGHT_BRAND_LOGO.png" alt="MAXX Potential Logo" style={{ height: '200px', width: 'auto' }} />  
