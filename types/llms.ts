@@ -28,7 +28,7 @@ export type MistralLLMID =
   | "mistral-tiny" // Mistral Tiny
   | "mistral-small" // Mistral Small
   | "mistral-medium" // Mistral Medium
-    "mistral-large-latest" // Mistral Large
+  |  "mistral-large-latest" // Mistral Large
 
 
 // Perplexity Models
