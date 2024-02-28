@@ -58,6 +58,7 @@ export const ModelIcon: FC<ModelIconProps> = ({
     case "mistral-tiny":
     case "mistral-small":
     case "mistral-medium":
+    case "mistral-large-latest":
       return (
         <Image
           className={cn(
