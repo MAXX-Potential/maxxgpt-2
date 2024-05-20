@@ -25,4 +25,34 @@ const CLAUDE_INSTANT: LLM = {
   imageInput: false
 }
 
-export const ANTHROPIC_LLM_LIST: LLM[] = [CLAUDE_2, CLAUDE_INSTANT]
+// Claude Opus (UPDATED 5/20/24)
+const CLAUDE_OPUS: LLM = {
+  modelId: "claude-3-opus-20240229", 
+  modelName: "Claude Opus",
+  provider: "anthropic",
+  hostedId: "claude-3-opus-20240229",
+  platformLink: ANTHROPIC_PLATORM_LINK,
+  imageInput: true
+}
+
+// Claude Sonnet (UPDATED 5/20/24)
+const CLAUDE_SONNET: LLM = {
+  modelId: "claude-3-sonnet-20240229", 
+  modelName: "Claude Sonnet",
+  provider: "anthropic",
+  hostedId: "claude-3-sonnet-20240229",
+  platformLink: ANTHROPIC_PLATORM_LINK,
+  imageInput: true
+}
+
+// Claude Haiku (UPDATED 5/20/24)
+const CLAUDE_HAIKU: LLM = {
+  modelId: "claude-3-haiku-20240307", 
+  modelName: "Claude Haiku",
+  provider: "anthropic",
+  hostedId: "claude-3-haiku-20240307",
+  platformLink: ANTHROPIC_PLATORM_LINK,
+  imageInput: true
+}
+
+export const ANTHROPIC_LLM_LIST: LLM[] = [CLAUDE_OPUS, CLAUDE_SONNET, CLAUDE_HAIKU, CLAUDE_2, CLAUDE_INSTANT]
