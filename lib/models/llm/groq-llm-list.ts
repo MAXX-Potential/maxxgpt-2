@@ -8,13 +8,7 @@ const LLaMA3_8B: LLM = {
   provider: "groq",
   hostedId: "llama3-8b-8192",
   platformLink: GROQ_PLATORM_LINK,
-  imageInput: false,
-  pricing: {
-    currency: "USD",
-    unit: "1M tokens",
-    inputCost: 0.05,
-    outputCost: 0.1
-  }
+  imageInput: false
 }
 
 const LLaMA3_70B: LLM = {
@@ -23,13 +17,7 @@ const LLaMA3_70B: LLM = {
   provider: "groq",
   hostedId: "llama3-70b-4096",
   platformLink: GROQ_PLATORM_LINK,
-  imageInput: false,
-  pricing: {
-    currency: "USD",
-    unit: "1M tokens",
-    inputCost: 0.59,
-    outputCost: 0.79
-  }
+  imageInput: false
 }
 
 const MIXTRAL_8X7B: LLM = {
@@ -38,13 +26,7 @@ const MIXTRAL_8X7B: LLM = {
   provider: "groq",
   hostedId: "mixtral-8x7b-32768",
   platformLink: GROQ_PLATORM_LINK,
-  imageInput: false,
-  pricing: {
-    currency: "USD",
-    unit: "1M tokens",
-    inputCost: 0.27,
-    outputCost: 0.27
-  }
+  imageInput: false
 }
 
 const GEMMA_7B_IT: LLM = {
@@ -53,13 +35,7 @@ const GEMMA_7B_IT: LLM = {
   provider: "groq",
   hostedId: "gemma-7b-it",
   platformLink: GROQ_PLATORM_LINK,
-  imageInput: false,
-  pricing: {
-    currency: "USD",
-    unit: "1M tokens",
-    inputCost: 0.15,
-    outputCost: 0.15
-  }
+  imageInput: false
 }
 
 export const GROQ_LLM_LIST: LLM[] = [
