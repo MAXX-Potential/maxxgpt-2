@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils"
 import meta from "@/public/providers/meta.png"
 import mistral from "@/public/providers/mistral.png"
+import groq from "@/public/providers/groq.png"
 import perplexity from "@/public/providers/perplexity.png"
 import { LLMID } from "@/types"
 import { IconSparkles } from "@tabler/icons-react"
@@ -75,9 +76,22 @@ export const ModelIcon: FC<ModelIconProps> = ({
           height={height}
         />
       )
+    case "groq":
+        return (
+          <Image
+            className={cn(
+              "rounded-sm p-0",
+              theme === "dark" ? "bg-white" : "border-[1px] border-black"
+            )}
+            src={groq.src}
+            alt="Groq"
+            width={width}
+            height={height}
+        />
+      ) 
     case "claude-2.1":
     case "claude-instant-1.2":
-    case "claude-3-opus-20240229": 
+    case "claude-3-opus-20240229":
     case "claude-3-sonnet-20240229":
     case "claude-3-haiku-20240307":
       return (

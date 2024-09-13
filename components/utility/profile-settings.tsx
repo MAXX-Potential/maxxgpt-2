@@ -101,6 +101,9 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
   const [mistralAPIKey, setMistralAPIKey] = useState(
     profile?.mistral_api_key || ""
   )
+  const [groqAPIKey, setGroqAPIKey] = useState(
+    profile?.groq_api_key || ""
+  )
   const [perplexityAPIKey, setPerplexityAPIKey] = useState(
     profile?.perplexity_api_key || ""
   )
@@ -113,6 +116,7 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
   const [isEnvAnthropic, setIsEnvAnthropic] = useState(false)
   const [isEnvGoogleGemini, setIsEnvGoogleGemini] = useState(false)
   const [isEnvMistral, setIsEnvMistral] = useState(false)
+  const [isEnvGroq, setIsEnvGroq] = useState(false)
   const [isEnvPerplexity, setIsEnvPerplexity] = useState(false)
   const [isEnvAzureOpenai, setIsEnvAzureOpenai] = useState(false)
   const [isEnvOpenrouter, setIsEnvOpenrouter] = useState(false)
@@ -147,6 +151,9 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
               break
             case "MISTRAL_API_KEY":
               setIsEnvMistral(isUsing)
+              break
+            case "GROQ_API_KEY":
+              setIsEnvGroq(isUsing)
               break
             case "PERPLEXITY_API_KEY":
               setIsEnvPerplexity(isUsing)
@@ -200,6 +207,7 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
       anthropic_api_key: anthropicAPIKey,
       google_gemini_api_key: googleGeminiAPIKey,
       mistral_api_key: mistralAPIKey,
+      groq_api_key: groqAPIKey,
       perplexity_api_key: perplexityAPIKey,
       use_azure_openai: useAzureOpenai,
       azure_openai_api_key: azureOpenaiAPIKey,
@@ -662,6 +670,21 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
                       type="password"
                       value={mistralAPIKey}
                       onChange={e => setMistralAPIKey(e.target.value)}
+                    />
+                  </>
+                )}
+              </div>
+              <div className="space-y-1">
+                {isEnvGroq ? (
+                  <Label>Groq API key set by admin.</Label>
+                ) : (
+                  <>
+                    <Label>Groq API Key</Label>
+                    <Input
+                      placeholder="Groq API Key"
+                      type="password"
+                      value={groqAPIKey}
+                      onChange={e => setGroqAPIKey(e.target.value)}
                     />
                   </>
                 )}
