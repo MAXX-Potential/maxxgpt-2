@@ -1,6 +1,6 @@
 import { LLM } from "@/types"
 
-const ANTHROPIC_PLATORM_LINK =
+const ANTHROPIC_PLATFORM_LINK =
   "https://docs.anthropic.com/claude/reference/getting-started-with-the-api"
 
 // Anthropic Models (UPDATED 6/20/24) -----------------------------
