@@ -21,13 +21,7 @@ const MIXTRAL: LLM = {
   provider: "mistral",
   hostedId: "mistral-small-latest",
   platformLink: MISTRAL_PLATORM_LINK,
-  imageInput: false,
-  pricing: {
-    currency: "USD",
-    unit: "1M tokens",
-    inputCost: 2,
-    outputCost: 6
-  }
+  imageInput: false
 }
 
 // Mistral Medium (UPDATED 12/21/23)
