@@ -4,6 +4,6 @@ export type ModelProvider =
   | "anthropic"
   | "mistral"
   // | "groq"
-  | "perplexity"
+  // | "perplexity"
   | "ollama"
   | "openrouter"

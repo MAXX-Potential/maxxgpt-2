@@ -47,8 +47,8 @@ export const isModelLocked = async (
       return !(isUsing || profile.mistral_api_key)
     // case "groq":
     //   return !(isUsing || profile.groq_api_key)
-    case "perplexity":
-      return !(isUsing || profile.perplexity_api_key)
+    // case "perplexity":
+    //   return !(isUsing || profile.perplexity_api_key)
     case "openrouter":
       return !(isUsing || profile.openrouter_api_key)
     default:
@@ -63,7 +63,7 @@ export const providerToKeyMap = {
   anthropic: VALID_KEYS.ANTHROPIC_API_KEY,
   mistral: VALID_KEYS.MISTRAL_API_KEY,
   // groq: VALID_KEYS.GROQ_API_KEY,
-  perplexity: VALID_KEYS.PERPLEXITY_API_KEY,
+  // perplexity: VALID_KEYS.PERPLEXITY_API_KEY,
   openrouter: VALID_KEYS.OPENROUTER_API_KEY,
   ollama: false
 }

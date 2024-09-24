@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils"
 import meta from "@/public/providers/meta.png"
 import mistral from "@/public/providers/mistral.png"
 // import groq from "@/public/providers/groq.png"
-import perplexity from "@/public/providers/perplexity.png"
+// import perplexity from "@/public/providers/perplexity.png"
 import { LLMID } from "@/types"
 import { IconSparkles } from "@tabler/icons-react"
 import { useTheme } from "next-themes"
@@ -120,20 +120,20 @@ export const ModelIcon: FC<ModelIconProps> = ({
           height={height}
         />
       )
-    case "pplx-7b-online":
-    case "pplx-70b-online":
-      return (
-        <Image
-          className={cn(
-            "rounded-sm p-1",
-            theme === "dark" ? "bg-white" : "border-[1px] border-black"
-          )}
-          src={perplexity.src}
-          alt="Mistral"
-          width={width}
-          height={height}
-        />
-      )
+    // case "pplx-7b-online":
+    // case "pplx-70b-online":
+    //   return (
+    //     <Image
+    //       className={cn(
+    //         "rounded-sm p-1",
+    //         theme === "dark" ? "bg-white" : "border-[1px] border-black"
+    //       )}
+    //       src={perplexity.src}
+    //       alt="Mistral"
+    //       width={width}
+    //       height={height}
+    //     />
+    //   )
     default:
       return <IconSparkles size={width} />
   }
