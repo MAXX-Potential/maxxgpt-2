@@ -3,7 +3,7 @@ export type ModelProvider =
   | "google"
   | "anthropic"
   | "mistral"
-  | "groq"
+  // | "groq"
   | "perplexity"
   | "ollama"
   | "openrouter"

@@ -5,7 +5,7 @@ export type LLMID =
   | GoogleLLMID
   | AnthropicLLMID
   | MistralLLMID
-  | GroqLLMID
+  // | GroqLLMID
   | PerplexityLLMID
 
 // OpenAI Models (UPDATED 12/18/23)
@@ -42,11 +42,11 @@ export type MistralLLMID =
   | "mistral-large-latest" // Mistral Large
 
 // Groq Models
-export type GroqLLMID =
-  | "llama3-8b-8192" // LLaMA3-8b
-  | "llama3-70b-8192" // LLaMA3-70b
-  | "mixtral-8x7b-32768" // Mixtral-8x7b
-  | "gemma-7b-it" // Gemma-7b IT
+// export type GroqLLMID =
+//   | "llama3-8b-8192" // LLaMA3-8b
+//   | "llama3-70b-8192" // LLaMA3-70b
+//   | "mixtral-8x7b-32768" // Mixtral-8x7b
+//   | "gemma-7b-it" // Gemma-7b IT
 
 // Perplexity Models
 export type PerplexityLLMID =
