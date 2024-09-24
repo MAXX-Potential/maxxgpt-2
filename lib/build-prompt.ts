@@ -253,6 +253,46 @@ export async function buildGoogleGeminiFinalMessages(
     }
 
     return GOOGLE_FORMATTED_MESSAGES
+  } else if (chatSettings.model === "gemini-1.5-flash") {
+    GOOGLE_FORMATTED_MESSAGES = [
+      {
+        role: "user",
+        parts: finalMessages[0].content
+      },
+      {
+        role: "model",
+        parts: "I will follow your instructions."
+      }
+    ]
+
+    for (let i = 1; i < finalMessages.length; i++) {
+      GOOGLE_FORMATTED_MESSAGES.push({
+        role: finalMessages[i].role === "user" ? "user" : "model",
+        parts: finalMessages[i].content as string
+      })
+    }
+
+    return GOOGLE_FORMATTED_MESSAGES
+  } else if (chatSettings.model === "gemini-1.5-pro") {
+    GOOGLE_FORMATTED_MESSAGES = [
+      {
+        role: "user",
+        parts: finalMessages[0].content
+      },
+      {
+        role: "model",
+        parts: "I will follow your instructions."
+      }
+    ]
+
+    for (let i = 1; i < finalMessages.length; i++) {
+      GOOGLE_FORMATTED_MESSAGES.push({
+        role: finalMessages[i].role === "user" ? "user" : "model",
+        parts: finalMessages[i].content as string
+      })
+    }
+
+    return GOOGLE_FORMATTED_MESSAGES
   } else if ((chatSettings.model = "gemini-pro-vision")) {
     // Gemini Pro Vision doesn't currently support messages
     async function fileToGenerativePart(file: File) {

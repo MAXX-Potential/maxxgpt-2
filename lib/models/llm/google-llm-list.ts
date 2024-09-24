@@ -35,14 +35,14 @@ const GEMINI_PRO: LLM = {
 }
 
 // Gemini Pro Vision (UPDATED 12/22/23)
-const GEMINI_PRO_VISION: LLM = {
-  modelId: "gemini-pro-vision",
-  modelName: "Gemini Pro Vision",
-  provider: "google",
-  hostedId: "gemini-pro-vision",
-  platformLink: GOOGLE_PLATORM_LINK,
-  imageInput: true
-}
+// const GEMINI_PRO_VISION: LLM = {
+//   modelId: "gemini-pro-vision",
+//   modelName: "Gemini Pro Vision",
+//   provider: "google",
+//   hostedId: "gemini-pro-vision",
+//   platformLink: GOOGLE_PLATORM_LINK,
+//   imageInput: true
+// }
 
 // export const GOOGLE_LLM_LIST: LLM[] = [GEMINI_PRO, GEMINI_PRO_VISION]
-export const GOOGLE_LLM_LIST: LLM[] = [GEMINI_PRO, GEMINI_PRO_VISION, GEMINI_1_5_PRO, GEMINI_1_5_FLASH]
+export const GOOGLE_LLM_LIST: LLM[] = [GEMINI_PRO, GEMINI_1_5_PRO, GEMINI_1_5_FLASH] //GEMINI_PRO_VISION, 
