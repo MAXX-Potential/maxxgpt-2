@@ -55,9 +55,9 @@ export default function SetupPage() {
   // Workspace Step
   const [workspaceInstructions, setWorkspaceInstructions] = useState("")
   const [defaultChatSettings, setDefaultChatSettings] = useState<ChatSettings>({
-    model: "gpt-4-1106-preview",
+    model: "gpt-4o",
     prompt: "You are a friendly, helpful AI assistant.",
-    temperature: 0.5,
+    temperature: 0.7,
     contextLength: 4096,
     includeProfileContext: true,
     includeWorkspaceInstructions: true,
