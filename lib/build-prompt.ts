@@ -273,7 +273,7 @@ export async function buildGoogleGeminiFinalMessages(
     }
 
     return GOOGLE_FORMATTED_MESSAGES
-  } else if (chatSettings.model === "gemini-1.5-pro") {
+  } else if (chatSettings.model === "gemini-1.5-pro-latest") {
     GOOGLE_FORMATTED_MESSAGES = [
       {
         role: "user",
