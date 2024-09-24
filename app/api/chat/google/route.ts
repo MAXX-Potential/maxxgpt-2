@@ -45,23 +45,23 @@ export async function POST(request: Request) {
       return new Response(readableStream, {
         headers: { "Content-Type": "text/plain" }
       })
-    } else if (chatSettings.model === "gemini-pro-vision") {
-      // FIX: Hacky until chat messages are supported
-      const HACKY_MESSAGE = messages[messages.length - 1]
+    } //else if (chatSettings.model === "gemini-pro-vision") {
+    //   // FIX: Hacky until chat messages are supported
+    //   const HACKY_MESSAGE = messages[messages.length - 1]
 
-      const result = await googleModel.generateContent([
-        HACKY_MESSAGE.prompt,
-        HACKY_MESSAGE.imageParts
-      ])
+    //   const result = await googleModel.generateContent([
+    //     HACKY_MESSAGE.prompt,
+    //     HACKY_MESSAGE.imageParts
+    //   ])
 
-      const response = result.response
+    //   const response = result.response
 
-      const text = response.text()
+    //   const text = response.text()
 
-      return new Response(text, {
-        headers: { "Content-Type": "text/plain" }
-      })
-    }
+    //   return new Response(text, {
+    //     headers: { "Content-Type": "text/plain" }
+    //   })
+    // }
   } catch (error: any) {
     let errorMessage = error.message || "An unexpected error occurred"
     const errorCode = error.status || 500
