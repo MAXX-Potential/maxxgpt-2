@@ -23,12 +23,22 @@ export const ChangePassword: FC<ChangePasswordProps> = () => {
 
   const handleResetPassword = async () => {
     if (!newPassword) return alert("Please enter your new password.")
+    if (newPassword !== confirmPassword) {
+      return alert("Passwords do not match.")
+    }
 
-    await supabase.auth.updateUser({ password: newPassword })
+    try {
+      const { error } = await supabase.auth.updateUser({ 
+        password: newPassword 
+      })
 
-    alert("Password changed successfully.")
+      if (error) throw error
 
-    router.push("/login")
+      alert("Password changed successfully.")
+      router.push("/login")
+    } catch (error: any) {
+      alert(error.message)
+    }
   }
 
   return (
