@@ -24,7 +24,6 @@ export async function POST(request: Request) {
       baseURL: "https://api.mistral.ai/v1"
     })
 
-
     const response = await mistral.chat.completions.create({
       model: chatSettings.model,
       messages,
@@ -33,11 +32,11 @@ export async function POST(request: Request) {
       stream: true
     })
 
-   // Convert the response into a friendly text-stream.
-   const stream = OpenAIStream(response)
+    // Convert the response into a friendly text-stream.
+    const stream = OpenAIStream(response)
 
-   // Respond with the stream
-   return new StreamingTextResponse(stream)
+    // Respond with the stream
+    return new StreamingTextResponse(stream)
   } catch (error: any) {
     let errorMessage = error.message || "An unexpected error occurred"
     const errorCode = error.status || 500
