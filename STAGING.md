@@ -162,26 +162,27 @@ This will create:
 
 After migrations are applied, populate with fake test data:
 
-```bash
-# WITHOUT password (magic link only - recommended)
-psql <staging-database-url> \
-  -c app.staging_seed_enabled=true \
-  -f supabase/staging-seed.sql
-
-# WITH password for testing
-psql <staging-database-url> \
-  -c app.staging_seed_enabled=true \
-  -c app.seed_user_password='your-test-password' \
-  -f supabase/staging-seed.sql
-```
-
-Or via Supabase SQL Editor:
+**Via Supabase SQL Editor (recommended):**
 ```sql
--- Set configuration (adjust password as needed)
-SET app.staging_seed_enabled = 'true';
-SET app.seed_user_password = 'your-test-password';  -- Optional
+-- Enable seed script (required)
+SELECT set_config('app.staging_seed_enabled', 'true', false);
+
+-- Optional: set password for test user
+SELECT set_config('app.seed_user_password', 'your-test-password', false);
 
 -- Then paste and run the contents of supabase/staging-seed.sql
+```
+
+**Via psql:**
+```bash
+# Connect and enable
+psql <staging-database-url> -c "SELECT set_config('app.staging_seed_enabled', 'true', false);"
+
+# Optional: set password
+psql <staging-database-url> -c "SELECT set_config('app.seed_user_password', 'your-password', false);"
+
+# Run seed
+psql <staging-database-url> -f supabase/staging-seed.sql
 ```
 
 **Test User Created:**
@@ -193,11 +194,11 @@ SET app.seed_user_password = 'your-test-password';  -- Optional
 
 The seed script includes multiple safety checks:
 
-1. **Configuration parameter check**: Requires `app.staging_seed_enabled=true`
-2. **Production database detection**: Refuses to run if database name or user contains "prod"
+1. **Explicit opt-in required**: Must run `SELECT set_config('app.staging_seed_enabled', 'true', false)` first
+2. **Production database detection**: Refuses to run if `auth.users` has more than 5 real users (production has many; fresh staging has few/none)
 3. **Fake data only**: All emails are `@example.com`, names are clearly test accounts
 4. **No real credentials**: No actual API keys, tokens, or sensitive data
-5. **Idempotent**: Uses fixed UUIDs and `ON CONFLICT` clauses, safe to run multiple times
+5. **Idempotent**: Uses fixed UUID and `ON CONFLICT` clauses, safe to run multiple times
 6. **Complete auth setup**: Creates both `auth.users` and `auth.identities` rows
 
 ### Manual Seed (Alternative)
@@ -265,8 +266,8 @@ supabase db push
 ### Seed Script Failures
 
 Common issues:
-- **"app.staging_seed_enabled" not set**: Include `-c app.staging_seed_enabled=true` in psql command
-- **Production database detected**: Verify you're connected to the staging Supabase project
+- **"app.staging_seed_enabled" not set**: Run `SELECT set_config('app.staging_seed_enabled', 'true', false);` first
+- **"This database has X users... Production detected"**: The database has more than 5 real users, indicating production. Verify you're connected to the staging Supabase project, not production.
 - **Foreign key violations**: Ensure migrations are fully applied before seeding (`supabase db push`)
 - **User already exists**: The seed is idempotent; it will update existing users with `ON CONFLICT`
 

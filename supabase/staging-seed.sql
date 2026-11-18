@@ -5,16 +5,16 @@
 -- It MUST ONLY be run on staging or local environments.
 -- 
 -- Safety checks:
--- 1. Requires app.staging_seed_enabled configuration parameter
--- 2. Checks that we're running against the staging project ref
+-- 1. Requires explicit opt-in via app.staging_seed_enabled
+-- 2. Verifies database has <= 5 real users (production has many more)
 -- 
 -- Usage:
---   psql connection string must include: -c app.staging_seed_enabled=true
---   Example:
---     psql "postgresql://..." -c app.staging_seed_enabled=true -f staging-seed.sql
+--   SELECT set_config('app.staging_seed_enabled', 'true', false);
+--   \i supabase/staging-seed.sql
 --   
 --   To set a password for test users:
---     psql "..." -c app.staging_seed_enabled=true -c app.seed_user_password='your-password' -f staging-seed.sql
+--   SELECT set_config('app.seed_user_password', 'your-password', false);
+--   \i supabase/staging-seed.sql
 -- ================================================================
 
 \set ON_ERROR_STOP on
@@ -22,39 +22,40 @@
 DO $$
 DECLARE
   seed_password TEXT;
-  current_db_host TEXT;
+  real_user_count INTEGER;
   test_user_1_id UUID := '00000000-0000-0000-0000-000000000001';
 BEGIN
   -- Safety check 1: Require explicit opt-in
   IF current_setting('app.staging_seed_enabled', true) IS DISTINCT FROM 'true' THEN
-    RAISE EXCEPTION 'SAFETY CHECK FAILED: This seed script requires app.staging_seed_enabled=true';
+    RAISE EXCEPTION 'SAFETY CHECK FAILED: This seed script requires app.staging_seed_enabled=true. Run: SELECT set_config(''app.staging_seed_enabled'', ''true'', false);';
   END IF;
   
-  -- Safety check 2: Verify we're running against staging project ref
-  -- The staging Supabase project ref should be in the connection string
-  SELECT INTO current_db_host current_setting('listen_addresses', true);
+  -- Safety check 2: Verify this is NOT production by counting real users
+  -- Production has many users; a fresh staging project has few or none
+  -- We exclude the fixed seed UUID to allow re-running on staging
+  SELECT COUNT(*) INTO real_user_count
+  FROM auth.users
+  WHERE id != test_user_1_id;
   
-  -- Check if we can detect the project ref from settings
-  -- Supabase projects have refs like "abcdefghijklmnop" in their hostnames
-  -- For extra safety, we refuse to run if this looks like a production database
-  IF current_database() ~ 'prod' OR current_user ~ 'prod' THEN
-    RAISE EXCEPTION 'SAFETY CHECK FAILED: Database name or user contains "prod". Refusing to run.';
+  IF real_user_count > 5 THEN
+    RAISE EXCEPTION 'SAFETY CHECK FAILED: This database has % users (excluding seed user). This seed script can only run on databases with <= 5 real users. Production detected - refusing to run.', real_user_count;
   END IF;
   
-  -- Get password from environment variable, if set
+  -- Get password from configuration parameter, if set
   seed_password := current_setting('app.seed_user_password', true);
   
   IF seed_password IS NULL OR seed_password = '' THEN
     RAISE NOTICE '============================================================';
     RAISE NOTICE 'NOTICE: app.seed_user_password not set.';
     RAISE NOTICE 'Users will be created WITHOUT passwords (magic link only).';
-    RAISE NOTICE 'To set passwords, add: -c app.seed_user_password=''password''';
+    RAISE NOTICE 'To set passwords, run:';
+    RAISE NOTICE '  SELECT set_config(''app.seed_user_password'', ''your-password'', false);';
     RAISE NOTICE '============================================================';
   ELSE
     RAISE NOTICE 'Using password from app.seed_user_password.';
   END IF;
   
-  RAISE NOTICE 'Safety checks passed. Running seed script...';
+  RAISE NOTICE 'Safety checks passed (%d real users found). Running seed script...', real_user_count;
   
   -- ================================================================
   -- Create test user (idempotent with fixed UUID)

@@ -2,6 +2,11 @@ import { createClient } from "@/lib/supabase/server"
 import { cookies } from "next/headers"
 import { NextResponse } from "next/server"
 
+function safeNext(next: string | null, origin: string): string {
+  if (!next || !next.startsWith('/') || next.startsWith('//') || next.startsWith('/\\') || /[\u0000-\u001F\u007F]/.test(next)) return '/'
+  try { const u = new URL(next, origin); return u.origin === origin ? u.pathname + u.search + u.hash : '/' } catch { return '/' }
+}
+
 export async function GET(request: Request) {
   const requestUrl = new URL(request.url)
   const code = requestUrl.searchParams.get("code")
@@ -25,9 +30,5 @@ export async function GET(request: Request) {
     return NextResponse.redirect(requestUrl.origin + '/login/password')
   }
 
-  if (next && next.startsWith('/') && !next.startsWith('//') && !next.startsWith('/\\')) {
-    return NextResponse.redirect(requestUrl.origin + next)
-  }
-
-  return NextResponse.redirect(requestUrl.origin)
+  return NextResponse.redirect(requestUrl.origin + safeNext(next, requestUrl.origin))
 }
