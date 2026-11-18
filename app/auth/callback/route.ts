@@ -1,15 +1,7 @@
+import { safeNext, getTrustedOrigin } from "@/lib/safe-next"
 import { createClient } from "@/lib/supabase/server"
 import { cookies } from "next/headers"
 import { NextResponse } from "next/server"
-
-function safeNext(next: string | null, origin: string): string {
-  if (!next || !next.startsWith('/') || next.startsWith('//') || next.startsWith('/\\') || /[\u0000-\u001F\u007F]/.test(next)) return '/'
-  try {
-    const u = new URL(next, origin)
-    if (u.origin !== origin || u.pathname.startsWith('//') || u.pathname.includes('\\')) return '/'
-    return u.pathname + u.search + u.hash
-  } catch { return '/' }
-}
 
 export async function GET(request: Request) {
   const requestUrl = new URL(request.url)
@@ -34,6 +26,6 @@ export async function GET(request: Request) {
     return NextResponse.redirect(requestUrl.origin + '/login/password')
   }
 
-  const siteOrigin = (process.env.NEXT_PUBLIC_SITE_URL || requestUrl.origin).replace(/\/+$/, '')
+  const siteOrigin = getTrustedOrigin(requestUrl.origin)
   return NextResponse.redirect(siteOrigin + safeNext(next, siteOrigin))
 }
