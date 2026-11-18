@@ -215,12 +215,7 @@ export const ChatUI: FC<ChatUIProps> = ({}) => {
       </div>
 
       <div className="bg-maxxgrey flex max-h-[50px] min-h-[50px] w-full items-center justify-center border-b-2 px-20 font-bold">
-        <a
-          href="https://docs.google.com/document/d/1YCNEwqLADxFQyzLHpMBhowaZOqzTOJn_sr1eWE93sAQ/edit?usp=sharing"
-          target="_blank"
-        >
-          MAXX Potential AI/LLM Policy
-        </a>
+        <a href="https://docs.google.com/document/d/1YCNEwqLADxFQyzLHpMBhowaZOqzTOJn_sr1eWE93sAQ/edit?usp=sharing" target="_blank">MAXX Potential AI/LLM Policy</a>
       </div>
 
       <div className="absolute bottom-2 right-2 hidden md:block lg:bottom-4 lg:right-4">

@@ -62,22 +62,18 @@ export default async function Login({
     const email = formData.get("email") as string
     const password = formData.get("password") as string
 
-    const emailDomainWhitelist =
-      process.env.EMAIL_DOMAIN_WHITELIST?.split(",") ?? []
-    if (
-      emailDomainWhitelist.length > 0 &&
-      !emailDomainWhitelist.includes(email.split("@")[1])
-    ) {
+    const emailDomainWhitelist = process.env.EMAIL_DOMAIN_WHITELIST?.split(",") ?? []
+    if (emailDomainWhitelist.length > 0 && !emailDomainWhitelist.includes(email.split("@")[1])) {
       return redirect(
-        `/login?message=Email ${email} is not allowed to sign up.`
+          `/login?message=Email ${email} is not allowed to sign up.`
       )
     }
 
     const emailWhitelist = process.env.EMAIL_WHITELIST?.split(",") ?? []
     if (emailWhitelist.length > 0 && !emailWhitelist.includes(email)) {
-      return redirect(
-        `/login?message=Email ${email} is not allowed to sign up.`
-      )
+        return redirect(
+            `/login?message=Email ${email} is not allowed to sign up.`
+        )
     }
 
     const cookieStore = cookies()
@@ -112,8 +108,7 @@ export default async function Login({
 
     // Use NEXT_PUBLIC_SITE_URL for environment-aware redirects (staging vs production)
     // Falls back to production URL if not set
-    const siteUrl =
-      process.env.NEXT_PUBLIC_SITE_URL || "https://gpt.maxxpotential.com"
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://gpt.maxxpotential.com"
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${siteUrl}/auth/callback?next=/login/password`
     })
@@ -153,7 +148,7 @@ export default async function Login({
           placeholder="••••••••"
         />
 
-        <Button className="bg-maxxblue mb-2 rounded-md px-4 py-2 text-white">
+        <Button className="mb-2 rounded-md bg-maxxblue px-4 py-2 text-white">
           Login
         </Button>
 
@@ -163,6 +158,7 @@ export default async function Login({
         >
           Sign Up
         </Button>
+
 
         <div className="text-muted-foreground mt-1 flex justify-center text-sm">
           <span className="mr-1">Forgot your password?</span>

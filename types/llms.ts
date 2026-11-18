@@ -1,8 +1,12 @@
 import { ModelProvider } from "."
 
-export type LLMID = OpenAILLMID | GoogleLLMID | AnthropicLLMID | MistralLLMID
-// | GroqLLMID
-// | PerplexityLLMID
+export type LLMID =
+  | OpenAILLMID
+  | GoogleLLMID
+  | AnthropicLLMID
+  | MistralLLMID
+  // | GroqLLMID
+  // | PerplexityLLMID
 
 // OpenAI Models (UPDATED 12/18/23)
 export type OpenAILLMID =
@@ -15,10 +19,11 @@ export type OpenAILLMID =
   | "gpt-3.5-turbo"
 
 // Google Models
-export type GoogleLLMID = "gemini-pro" // Gemini Pro
-// | "gemini-pro-vision" // Gemini Pro Vision
-// | "gemini-1.5-pro-latest" // Gemini 1.5 Pro
-// | "gemini-1.5-flash" // Gemini 1.5 Flash
+export type GoogleLLMID =
+  | "gemini-pro" // Gemini Pro
+  // | "gemini-pro-vision" // Gemini Pro Vision
+  // | "gemini-1.5-pro-latest" // Gemini 1.5 Pro
+  // | "gemini-1.5-flash" // Gemini 1.5 Flash
 
 // Anthropic Models
 export type AnthropicLLMID =

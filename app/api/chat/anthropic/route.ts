@@ -48,7 +48,7 @@ export async function POST(request: Request) {
       errorMessage =
         "Anthropic API Key is incorrect. Please fix it in your profile settings."
     }
-
+    
     return new Response(JSON.stringify({ message: errorMessage }), {
       status: errorCode
     })

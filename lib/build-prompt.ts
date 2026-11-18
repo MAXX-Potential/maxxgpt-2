@@ -252,8 +252,7 @@ export async function buildGoogleGeminiFinalMessages(
       })
     }
 
-    return GOOGLE_FORMATTED_MESSAGES
-  }
+    return GOOGLE_FORMATTED_MESSAGES }
   // } else if (chatSettings.model === "gemini-1.5-flash") {
   //   GOOGLE_FORMATTED_MESSAGES = [
   //     {
