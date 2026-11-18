@@ -1,3 +1,4 @@
+import { safeNext, getTrustedOrigin } from "@/lib/safe-next"
 import { createClient } from "@/lib/supabase/server"
 import { cookies } from "next/headers"
 import { NextResponse } from "next/server"
@@ -25,9 +26,6 @@ export async function GET(request: Request) {
     return NextResponse.redirect(requestUrl.origin + '/login/password')
   }
 
-  if (next) {
-    return NextResponse.redirect(requestUrl.origin + next)
-  }
-
-  return NextResponse.redirect(requestUrl.origin)
+  const siteOrigin = getTrustedOrigin(requestUrl.origin)
+  return NextResponse.redirect(siteOrigin + safeNext(next, siteOrigin))
 }
