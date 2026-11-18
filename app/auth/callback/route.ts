@@ -25,7 +25,7 @@ export async function GET(request: Request) {
     return NextResponse.redirect(requestUrl.origin + '/login/password')
   }
 
-  if (next) {
+  if (next && next.startsWith('/') && !next.startsWith('//') && !next.startsWith('/\\')) {
     return NextResponse.redirect(requestUrl.origin + next)
   }
 

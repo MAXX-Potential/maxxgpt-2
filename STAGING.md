@@ -45,11 +45,13 @@ The following environment variables must be configured in Vercel for the `dev` b
 
 ### Site Configuration (Required for OAuth redirects)
 
-| Variable | Scope | Notes |
+| Variable | Scope | Value |
 |----------|-------|-------|
-| `NEXT_PUBLIC_SITE_URL` | dev | Set to `https://maxxgpt-2-staging.vercel.app` for staging |
+| `NEXT_PUBLIC_SITE_URL` | dev | `https://maxxgpt-2-staging.vercel.app` |
+| `NEXT_PUBLIC_SITE_URL` | production (main) | `https://gpt.maxxpotential.com` |
+| `NEXT_PUBLIC_SITE_URL` | local | `http://localhost:3000` |
 
-This variable ensures OAuth password reset emails redirect to the correct environment. Production uses `https://gpt.maxxpotential.com`.
+This variable ensures OAuth password reset emails redirect to the correct environment. The code automatically strips trailing slashes.
 
 ### API Keys (Optional) - OK TO SHARE OR USE TEST KEYS
 
@@ -129,15 +131,6 @@ href="https://maxxpotential.com"
 **Risk:** Low - These are marketing site links, not functional
 **Mitigation:** None needed, but could be environment-aware
 
-### 4. Migration File (IMPORTANT)
-
-**File:** `supabase/migrations/20240108234540_setup.sql` (lines 53-54)
-```sql
-project_url TEXT := 'http://supabase_kong_chatbotui:8000';
-service_role_key TEXT := '...';
-```
-**Risk:** Low for staging (used for local dev)
-**Mitigation:** Update these values when setting up the staging Supabase project with actual staging credentials
 
 ## Database Setup
 
@@ -170,29 +163,42 @@ This will create:
 After migrations are applied, populate with fake test data:
 
 ```bash
-# Set the safety flag and run seed
-psql <staging-database-url> -c "SET app.staging_seed_enabled = 'true';" -f supabase/staging-seed.sql
+# WITHOUT password (magic link only - recommended)
+psql <staging-database-url> \
+  -c app.staging_seed_enabled=true \
+  -f supabase/staging-seed.sql
+
+# WITH password for testing
+psql <staging-database-url> \
+  -c app.staging_seed_enabled=true \
+  -c app.seed_user_password='your-test-password' \
+  -f supabase/staging-seed.sql
 ```
 
 Or via Supabase SQL Editor:
 ```sql
+-- Set configuration (adjust password as needed)
 SET app.staging_seed_enabled = 'true';
+SET app.seed_user_password = 'your-test-password';  -- Optional
+
 -- Then paste and run the contents of supabase/staging-seed.sql
 ```
 
-**Test Users Created:**
-- `alice.demo@example.com` (password: `demo-password-123`)
-- `bob.test@example.com` (password: `demo-password-456`)
-- `charlie.sample@example.com` (password: `demo-password-789`)
+**Test User Created:**
+- `alice.demo@example.com`
+  - Authentication: Magic link (or password if `app.seed_user_password` was set)
+  - User ID: `00000000-0000-0000-0000-000000000001` (fixed for idempotency)
 
 ### Seed Safety Features
 
 The seed script includes multiple safety checks:
 
-1. **Environment variable check**: Requires `app.staging_seed_enabled = 'true'`
-2. **Production domain detection**: Refuses to run if it detects production URLs in the database config
+1. **Configuration parameter check**: Requires `app.staging_seed_enabled=true`
+2. **Production database detection**: Refuses to run if database name or user contains "prod"
 3. **Fake data only**: All emails are `@example.com`, names are clearly test accounts
 4. **No real credentials**: No actual API keys, tokens, or sensitive data
+5. **Idempotent**: Uses fixed UUIDs and `ON CONFLICT` clauses, safe to run multiple times
+6. **Complete auth setup**: Creates both `auth.users` and `auth.identities` rows
 
 ### Manual Seed (Alternative)
 
@@ -259,10 +265,10 @@ supabase db push
 ### Seed Script Failures
 
 Common issues:
-- **"app.staging_seed_enabled" not set**: Run `SET app.staging_seed_enabled = 'true';` first
-- **Production domain detected**: Check auth.config table, update site_url
-- **Foreign key violations**: Ensure migrations are fully applied before seeding
-- **User already exists**: Comment out the data cleanup section if adding incremental data
+- **"app.staging_seed_enabled" not set**: Include `-c app.staging_seed_enabled=true` in psql command
+- **Production database detected**: Verify you're connected to the staging Supabase project
+- **Foreign key violations**: Ensure migrations are fully applied before seeding (`supabase db push`)
+- **User already exists**: The seed is idempotent; it will update existing users with `ON CONFLICT`
 
 ## Deployment URLs Reference
 
@@ -282,7 +288,7 @@ Common issues:
 
 2. **Engineering Lead**: Set up staging Supabase
    - Apply migrations: `supabase db push`
-   - Run seed script (with `STAGING_SEED_ENABLED=true` and optionally `SEED_USER_PASSWORD`)
+   - Run seed script (with `app.staging_seed_enabled=true` and optionally `app.seed_user_password`)
    - Configure auth redirect URLs in Supabase dashboard (Settings → Authentication)
 
 3. **Team**: Verify staging environment

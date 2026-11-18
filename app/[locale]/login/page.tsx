@@ -108,7 +108,7 @@ export default async function Login({
 
     // Use NEXT_PUBLIC_SITE_URL for environment-aware redirects (staging vs production)
     // Falls back to production URL if not set
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://gpt.maxxpotential.com"
+    const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://gpt.maxxpotential.com").replace(/\/+$/, '')
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${siteUrl}/auth/callback?next=/login/password`
     })
