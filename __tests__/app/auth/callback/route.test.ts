@@ -2,17 +2,7 @@
  * @jest-environment node
  */
 
-// Test the safeNext function from auth callback route
-// This is extracted for testing without mocking Next.js internals
-
-function safeNext(next: string | null, origin: string): string {
-  if (!next || !next.startsWith('/') || next.startsWith('//') || next.startsWith('/\\') || /[\u0000-\u001F\u007F]/.test(next)) return '/'
-  try {
-    const u = new URL(next, origin)
-    if (u.origin !== origin || u.pathname.startsWith('//') || u.pathname.includes('\\')) return '/'
-    return u.pathname + u.search + u.hash
-  } catch { return '/' }
-}
+import { safeNext, getTrustedOrigin } from '@/lib/safe-next'
 
 describe('safeNext - Open Redirect Protection', () => {
   const origin = 'https://example.com'
@@ -57,5 +47,42 @@ describe('safeNext - Open Redirect Protection', () => {
   test('rejects cross-origin redirect attempts', () => {
     // URL constructor will parse this as https://evil.com with path
     expect(safeNext('https://evil.com/path', origin)).toBe('/')
+  })
+})
+
+describe('getTrustedOrigin', () => {
+  const originalEnv = process.env.NEXT_PUBLIC_SITE_URL
+
+  afterEach(() => {
+    if (originalEnv === undefined) {
+      delete process.env.NEXT_PUBLIC_SITE_URL
+    } else {
+      process.env.NEXT_PUBLIC_SITE_URL = originalEnv
+    }
+  })
+
+  test('returns request origin when NEXT_PUBLIC_SITE_URL is not set', () => {
+    delete process.env.NEXT_PUBLIC_SITE_URL
+    expect(getTrustedOrigin('https://request.example.com')).toBe('https://request.example.com')
+  })
+
+  test('returns parsed origin from NEXT_PUBLIC_SITE_URL when set', () => {
+    process.env.NEXT_PUBLIC_SITE_URL = 'https://trusted.example.com'
+    expect(getTrustedOrigin('https://request.example.com')).toBe('https://trusted.example.com')
+  })
+
+  test('strips trailing slash from NEXT_PUBLIC_SITE_URL', () => {
+    process.env.NEXT_PUBLIC_SITE_URL = 'https://trusted.example.com/'
+    expect(getTrustedOrigin('https://request.example.com')).toBe('https://trusted.example.com')
+  })
+
+  test('handles NEXT_PUBLIC_SITE_URL with path correctly', () => {
+    process.env.NEXT_PUBLIC_SITE_URL = 'https://trusted.example.com/path'
+    expect(getTrustedOrigin('https://request.example.com')).toBe('https://trusted.example.com')
+  })
+
+  test('falls back to request origin on invalid NEXT_PUBLIC_SITE_URL', () => {
+    process.env.NEXT_PUBLIC_SITE_URL = 'not-a-valid-url'
+    expect(getTrustedOrigin('https://request.example.com')).toBe('https://request.example.com')
   })
 })
