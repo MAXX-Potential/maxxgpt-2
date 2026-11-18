@@ -141,7 +141,7 @@ export const ChatFilesDisplay: FC<ChatFilesDisplayProps> = ({}) => {
                 />
 
                 <IconX
-                  className="bg-muted-foreground border-primary absolute right-[-6px] top-[-2px] flex h-5 w-5 cursor-pointer items-center justify-center rounded-full border-[1px] text-[10px] hover:border-red-500 hover:bg-white hover:text-red-500"
+                  className="bg-muted-foreground border-primary absolute right-[-6px] top-[-2px] flex size-5 cursor-pointer items-center justify-center rounded-full border-[1px] text-[10px] hover:border-red-500 hover:bg-white hover:text-red-500"
                   onClick={e => {
                     e.stopPropagation()
                     setNewMessageImages(
@@ -163,7 +163,7 @@ export const ChatFilesDisplay: FC<ChatFilesDisplayProps> = ({}) => {
                   key={index}
                   className="relative flex h-[64px] items-center space-x-4 rounded-xl border-2 px-4 py-3"
                 >
-                  <div className="rounded bg-maxxblue p-2">
+                  <div className="bg-maxxblue rounded p-2">
                     <IconLoader2 className="animate-spin" />
                   </div>
 
@@ -178,7 +178,7 @@ export const ChatFilesDisplay: FC<ChatFilesDisplayProps> = ({}) => {
                   className="relative flex h-[64px] cursor-pointer items-center space-x-4 rounded-xl border-2 px-4 py-3 hover:opacity-50"
                   onClick={() => getLinkAndView(file)}
                 >
-                  <div className="rounded bg-maxxblue p-2">
+                  <div className="bg-maxxblue rounded p-2">
                     {(() => {
                       let fileExtension = file.type.includes("/")
                         ? file.type.split("/")[1]
@@ -208,7 +208,7 @@ export const ChatFilesDisplay: FC<ChatFilesDisplayProps> = ({}) => {
                   </div>
 
                   <IconX
-                    className="bg-muted-foreground border-primary absolute right-[-6px] top-[-6px] flex h-5 w-5 cursor-pointer items-center justify-center rounded-full border-[1px] text-[10px] hover:border-red-500 hover:bg-white hover:text-red-500"
+                    className="bg-muted-foreground border-primary absolute right-[-6px] top-[-6px] flex size-5 cursor-pointer items-center justify-center rounded-full border-[1px] text-[10px] hover:border-red-500 hover:bg-white hover:text-red-500"
                     onClick={e => {
                       e.stopPropagation()
                       setNewMessageFiles(
