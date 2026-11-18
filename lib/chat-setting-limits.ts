@@ -45,7 +45,7 @@ export const CHAT_SETTING_LIMITS: Record<LLMID, ChatSettingLimits> = {
     MAX_TOKEN_OUTPUT_LENGTH: 4096,
     MAX_CONTEXT_LENGTH: 200000
   },
-
+  
   // GOOGLE MODELS
   // "gemini-1.5-flash": {
   //   MIN_TEMPERATURE: 0.0,
@@ -167,7 +167,7 @@ export const CHAT_SETTING_LIMITS: Record<LLMID, ChatSettingLimits> = {
     MAX_TEMPERATURE: 2.0,
     MAX_TOKEN_OUTPUT_LENGTH: 4096,
     MAX_CONTEXT_LENGTH: 128000
-  }
+  },
 
   // PERPLEXITY MODELS
   // "pplx-7b-online": {

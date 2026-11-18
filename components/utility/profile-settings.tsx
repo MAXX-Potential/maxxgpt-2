@@ -730,7 +730,11 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
             {/* <ThemeSwitcher /> */}
 
             <WithTooltip
-              display={<div>Download MAXX GPT 2.0 data as JSON.</div>}
+              display={
+                <div>
+                  Download MAXX GPT 2.0 data as JSON.
+                </div>
+              }
               trigger={
                 <IconFileDownload
                   className="cursor-pointer hover:opacity-50"
