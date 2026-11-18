@@ -25,6 +25,9 @@
     "db-push": "supabase db push",
     "test": "jest"
   },
+  "engines": {
+    "node": "22.x"
+  },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.12.4",
     "@azure/openai": "^1.0.0-beta.8",
