@@ -4,7 +4,11 @@ import { NextResponse } from "next/server"
 
 function safeNext(next: string | null, origin: string): string {
   if (!next || !next.startsWith('/') || next.startsWith('//') || next.startsWith('/\\') || /[\u0000-\u001F\u007F]/.test(next)) return '/'
-  try { const u = new URL(next, origin); return u.origin === origin ? u.pathname + u.search + u.hash : '/' } catch { return '/' }
+  try {
+    const u = new URL(next, origin)
+    if (u.origin !== origin || u.pathname.startsWith('//') || u.pathname.includes('\\')) return '/'
+    return u.pathname + u.search + u.hash
+  } catch { return '/' }
 }
 
 export async function GET(request: Request) {
@@ -30,5 +34,6 @@ export async function GET(request: Request) {
     return NextResponse.redirect(requestUrl.origin + '/login/password')
   }
 
-  return NextResponse.redirect(requestUrl.origin + safeNext(next, requestUrl.origin))
+  const siteOrigin = (process.env.NEXT_PUBLIC_SITE_URL || requestUrl.origin).replace(/\/+$/, '')
+  return NextResponse.redirect(siteOrigin + safeNext(next, siteOrigin))
 }
