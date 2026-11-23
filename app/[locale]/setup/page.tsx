@@ -128,18 +128,18 @@ export default function SetupPage() {
       embeddings_provider: defaultChatSettings.embeddingsProvider
     }
 
-    const workspaces = await getWorkspacesByUserId(profile.user_id) as any
-    const homeWorkspace = workspaces.find((w: any) => w.is_home)
+    const workspaces = await getWorkspacesByUserId(profile.user_id)
+    const homeWorkspace = workspaces.find(w => w.is_home)
 
     // There will always be a home workspace
     const updatedWorkspace = await updateWorkspace(
       homeWorkspace!.id,
       updateHomeWorkspacePayload
-    ) as any
+    )
 
     setSelectedWorkspace(updatedWorkspace)
     setWorkspaces(
-      workspaces.map((workspace: any) =>
+      workspaces.map(workspace =>
         workspace.id === updatedWorkspace.id ? updatedWorkspace : workspace
       )
     )

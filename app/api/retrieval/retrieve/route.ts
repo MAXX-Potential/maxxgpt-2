@@ -13,7 +13,7 @@ export async function POST(request: Request) {
     sourceCount: number
   }
 
-  const uniqueFileIds = [...new Set(fileIds)]
+  const uniqueFileIds = Array.isArray(fileIds) ? [...new Set(fileIds)] : []
 
   try {
     let profile
@@ -25,9 +25,15 @@ export async function POST(request: Request) {
       })
     }
 
-    if (!Array.isArray(fileIds) || fileIds.length === 0) {
+    if (
+      !Array.isArray(fileIds) ||
+      fileIds.length === 0 ||
+      fileIds.some(id => typeof id !== "string" || id === "")
+    ) {
       return new Response(
-        JSON.stringify({ message: "Bad Request: fileIds must be a non-empty array" }),
+        JSON.stringify({
+          message: "Bad Request: fileIds must be a non-empty array"
+        }),
         { status: 400 }
       )
     }
