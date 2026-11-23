@@ -7,22 +7,66 @@ import { createClient } from "@supabase/supabase-js"
 import { NextResponse } from "next/server"
 import OpenAI from "openai"
 
-export async function POST(req: Request) {
-  const json = await req.json()
-  const { text, fileId, embeddingsProvider, fileExtension } = json as {
-    text: string
-    fileId: string
-    embeddingsProvider: "openai" | "local"
-    fileExtension: string
-  }
+const UUID_RE =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
+export async function POST(req: Request) {
   try {
+    let profile: Awaited<ReturnType<typeof getServerProfile>>
+    try {
+      profile = await getServerProfile()
+    } catch (error) {
+      return new Response(JSON.stringify({ message: "Unauthorized" }), {
+        status: 401
+      })
+    }
+
+    let json
+    try {
+      json = await req.json()
+    } catch (error) {
+      return new Response(JSON.stringify({ message: "Invalid JSON body" }), {
+        status: 400
+      })
+    }
+
+    const { text, fileId, embeddingsProvider, fileExtension } = json as {
+      text: string
+      fileId: string
+      embeddingsProvider: "openai" | "local"
+      fileExtension: string
+    }
+
+    if (typeof fileId !== "string" || !UUID_RE.test(fileId)) {
+      return new Response(
+        JSON.stringify({ message: "Bad Request: fileId must be a valid id" }),
+        { status: 400 }
+      )
+    }
+
     const supabaseAdmin = createClient<Database>(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     )
 
-    const profile = await getServerProfile()
+    const { data: fileRecord, error: fileError } = await supabaseAdmin
+      .from("files")
+      .select("user_id")
+      .eq("id", fileId)
+      .single()
+
+    if (fileError || !fileRecord) {
+      return new Response(JSON.stringify({ message: "File not found" }), {
+        status: 404
+      })
+    }
+
+    if (fileRecord.user_id !== profile.user_id) {
+      return new Response(
+        JSON.stringify({ message: "Forbidden: Access denied to this file" }),
+        { status: 403 }
+      )
+    }
 
     if (embeddingsProvider === "openai") {
       if (profile.use_azure_openai) {

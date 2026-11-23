@@ -9,10 +9,14 @@ export default function HomePage() {
   const { theme } = useTheme()
 
   return (
-    <div className="flex h-screen w-screen flex-col items-center justify-center">
-      <div className="mb-5"> 
-      <img src="/LIGHT_BRAND_LOGO.png" alt="MAXX Potential Logo" style={{ height: '200px', width: 'auto' }} />  
-      {/* {theme === "dark" ? 
+    <div className="size-screen flex flex-col items-center justify-center">
+      <div className="mb-5">
+        <img
+          src="/LIGHT_BRAND_LOGO.png"
+          alt="MAXX Potential Logo"
+          style={{ height: "200px", width: "auto" }}
+        />
+        {/* {theme === "dark" ? 
           <img src="/DARK_BRAND_LOGO.png" alt="MAXX Potential Logo" style={{ height: '200px', width: 'auto' }} /> : 
           <img src="/LIGHT_BRAND_LOGO.png" alt="MAXX Potential Logo" style={{ height: '200px', width: 'auto' }} />  
            
@@ -22,7 +26,7 @@ export default function HomePage() {
       <div className="text-4xl font-bold">GPT</div>
 
       <Link
-        className="mt-4 flex w-[200px] items-center justify-center rounded-md bg-maxxblue p-2 font-semibold"
+        className="bg-maxxblue mt-4 flex w-[200px] items-center justify-center rounded-md p-2 font-semibold"
         href="/chat"
       >
         Start Chatting

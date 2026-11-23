@@ -28,8 +28,8 @@ export const ChangePassword: FC<ChangePasswordProps> = () => {
     }
 
     try {
-      const { error } = await supabase.auth.updateUser({ 
-        password: newPassword 
+      const { error } = await supabase.auth.updateUser({
+        password: newPassword
       })
 
       if (error) throw error

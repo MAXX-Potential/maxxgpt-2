@@ -1,3 +1,4 @@
+import { chatRateLimiter } from "@/lib/rate-limiter"
 import { checkApiKey, getServerProfile } from "@/lib/server/server-chat-helpers"
 import { ServerRuntime } from "next"
 import OpenAI from "openai"
@@ -6,7 +7,23 @@ export const runtime: ServerRuntime = "edge"
 
 export async function GET() {
   try {
-    const profile = await getServerProfile()
+    let profile
+    try {
+      profile = await getServerProfile()
+    } catch (error) {
+      return new Response(JSON.stringify({ message: "Unauthorized" }), {
+        status: 401
+      })
+    }
+
+    if (!chatRateLimiter.check(profile.user_id).allowed) {
+      return new Response(
+        JSON.stringify({
+          message: "Rate limit exceeded. Please try again later."
+        }),
+        { status: 429 }
+      )
+    }
 
     checkApiKey(profile.openai_api_key, "OpenAI")
 

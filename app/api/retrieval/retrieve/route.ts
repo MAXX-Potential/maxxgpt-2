@@ -4,24 +4,89 @@ import { Database } from "@/supabase/types"
 import { createClient } from "@supabase/supabase-js"
 import OpenAI from "openai"
 
+const DEFAULT_SOURCE_COUNT = 4
+const MAX_SOURCE_COUNT = 10 // matches the UI slider max in chat-retrieval-settings.tsx
+
 export async function POST(request: Request) {
-  const json = await request.json()
-  const { userInput, fileIds, embeddingsProvider, sourceCount } = json as {
-    userInput: string
-    fileIds: string[]
-    embeddingsProvider: "openai" | "local"
-    sourceCount: number
-  }
-
-  const uniqueFileIds = [...new Set(fileIds)]
-
   try {
+    let profile
+    try {
+      profile = await getServerProfile()
+    } catch (error) {
+      return new Response(JSON.stringify({ message: "Unauthorized" }), {
+        status: 401
+      })
+    }
+
+    let json
+    try {
+      json = await request.json()
+    } catch (error) {
+      return new Response(JSON.stringify({ message: "Invalid JSON body" }), {
+        status: 400
+      })
+    }
+
+    const {
+      userInput,
+      fileIds,
+      embeddingsProvider,
+      sourceCount: requestedSourceCount
+    } = json as {
+      userInput: string
+      fileIds: string[]
+      embeddingsProvider: "openai" | "local"
+      sourceCount: number
+    }
+
+    if (
+      !Array.isArray(fileIds) ||
+      fileIds.length === 0 ||
+      fileIds.some(id => typeof id !== "string" || id === "")
+    ) {
+      return new Response(
+        JSON.stringify({
+          message: "Bad Request: fileIds must be a non-empty array"
+        }),
+        { status: 400 }
+      )
+    }
+
+    const uniqueFileIds = [...new Set(fileIds)]
+
+    const sourceCount = Number.isFinite(requestedSourceCount)
+      ? Math.min(
+          Math.max(Math.floor(requestedSourceCount), 1),
+          MAX_SOURCE_COUNT
+        )
+      : DEFAULT_SOURCE_COUNT
+
     const supabaseAdmin = createClient<Database>(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     )
 
-    const profile = await getServerProfile()
+    const { data: userFiles, error: filesError } = await supabaseAdmin
+      .from("files")
+      .select("id")
+      .eq("user_id", profile.user_id)
+      .in("id", uniqueFileIds)
+
+    if (filesError) {
+      throw filesError
+    }
+
+    const userFileIds = new Set(userFiles?.map(f => f.id) || [])
+    const unauthorizedFiles = uniqueFileIds.filter(id => !userFileIds.has(id))
+
+    if (unauthorizedFiles.length > 0) {
+      return new Response(
+        JSON.stringify({
+          message: "Forbidden: Access denied to one or more files"
+        }),
+        { status: 403 }
+      )
+    }
 
     if (embeddingsProvider === "openai") {
       if (profile.use_azure_openai) {

@@ -1,3 +1,4 @@
+import { chatRateLimiter } from "@/lib/rate-limiter"
 import { checkApiKey, getServerProfile } from "@/lib/server/server-chat-helpers"
 import { ChatSettings } from "@/types"
 import { ErrorResponse, ErrorResponseSchema } from "@/types/error-response"
@@ -16,7 +17,24 @@ export async function POST(request: Request) {
   }
 
   try {
-    const profile = await getServerProfile()
+    let profile
+    try {
+      profile = await getServerProfile()
+    } catch (error) {
+      return new Response(JSON.stringify({ message: "Unauthorized" }), {
+        status: 401
+      })
+    }
+
+    const rateLimitResult = chatRateLimiter.check(profile.user_id)
+    if (!rateLimitResult.allowed) {
+      return new Response(
+        JSON.stringify({
+          message: "Rate limit exceeded. Please try again later."
+        }),
+        { status: 429 }
+      )
+    }
 
     checkApiKey(profile.openrouter_api_key, "OpenRouter")
 
