@@ -7,15 +7,10 @@ import { createClient } from "@supabase/supabase-js"
 import { NextResponse } from "next/server"
 import OpenAI from "openai"
 
-export async function POST(req: Request) {
-  const json = await req.json()
-  const { text, fileId, embeddingsProvider, fileExtension } = json as {
-    text: string
-    fileId: string
-    embeddingsProvider: "openai" | "local"
-    fileExtension: string
-  }
+const UUID_RE =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
+export async function POST(req: Request) {
   try {
     let profile: Awaited<ReturnType<typeof getServerProfile>>
     try {
@@ -24,6 +19,29 @@ export async function POST(req: Request) {
       return new Response(JSON.stringify({ message: "Unauthorized" }), {
         status: 401
       })
+    }
+
+    let json
+    try {
+      json = await req.json()
+    } catch (error) {
+      return new Response(JSON.stringify({ message: "Invalid JSON body" }), {
+        status: 400
+      })
+    }
+
+    const { text, fileId, embeddingsProvider, fileExtension } = json as {
+      text: string
+      fileId: string
+      embeddingsProvider: "openai" | "local"
+      fileExtension: string
+    }
+
+    if (typeof fileId !== "string" || !UUID_RE.test(fileId)) {
+      return new Response(
+        JSON.stringify({ message: "Bad Request: fileId must be a valid id" }),
+        { status: 400 }
+      )
     }
 
     const supabaseAdmin = createClient<Database>(

@@ -7,6 +7,7 @@ class RateLimiter {
   private requests: Map<string, RateLimitEntry> = new Map()
   private readonly limit: number
   private readonly windowMs: number
+  private lastSweep = 0
 
   constructor(limit: number = 100, windowMs: number = 60000) {
     this.limit = limit
@@ -15,6 +16,7 @@ class RateLimiter {
 
   check(userId: string): { allowed: boolean; remaining: number } {
     const now = Date.now()
+    this.sweep(now)
     const entry = this.requests.get(userId)
 
     if (!entry || now > entry.resetTime) {
@@ -31,6 +33,18 @@ class RateLimiter {
 
     entry.count++
     return { allowed: true, remaining: this.limit - entry.count }
+  }
+
+  // Lazily drop expired entries (at most once per window) so the Map cannot
+  // grow without bound. No timers: safe for serverless / edge runtimes.
+  private sweep(now: number) {
+    if (now - this.lastSweep < this.windowMs) return
+    this.lastSweep = now
+    for (const [userId, entry] of this.requests.entries()) {
+      if (now > entry.resetTime) {
+        this.requests.delete(userId)
+      }
+    }
   }
 }
 

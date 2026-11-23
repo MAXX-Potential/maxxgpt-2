@@ -4,17 +4,10 @@ import { Database } from "@/supabase/types"
 import { createClient } from "@supabase/supabase-js"
 import OpenAI from "openai"
 
+const DEFAULT_SOURCE_COUNT = 4
+const MAX_SOURCE_COUNT = 10 // matches the UI slider max in chat-retrieval-settings.tsx
+
 export async function POST(request: Request) {
-  const json = await request.json()
-  const { userInput, fileIds, embeddingsProvider, sourceCount } = json as {
-    userInput: string
-    fileIds: string[]
-    embeddingsProvider: "openai" | "local"
-    sourceCount: number
-  }
-
-  const uniqueFileIds = Array.isArray(fileIds) ? [...new Set(fileIds)] : []
-
   try {
     let profile
     try {
@@ -23,6 +16,27 @@ export async function POST(request: Request) {
       return new Response(JSON.stringify({ message: "Unauthorized" }), {
         status: 401
       })
+    }
+
+    let json
+    try {
+      json = await request.json()
+    } catch (error) {
+      return new Response(JSON.stringify({ message: "Invalid JSON body" }), {
+        status: 400
+      })
+    }
+
+    const {
+      userInput,
+      fileIds,
+      embeddingsProvider,
+      sourceCount: requestedSourceCount
+    } = json as {
+      userInput: string
+      fileIds: string[]
+      embeddingsProvider: "openai" | "local"
+      sourceCount: number
     }
 
     if (
@@ -37,6 +51,15 @@ export async function POST(request: Request) {
         { status: 400 }
       )
     }
+
+    const uniqueFileIds = [...new Set(fileIds)]
+
+    const sourceCount = Number.isFinite(requestedSourceCount)
+      ? Math.min(
+          Math.max(Math.floor(requestedSourceCount), 1),
+          MAX_SOURCE_COUNT
+        )
+      : DEFAULT_SOURCE_COUNT
 
     const supabaseAdmin = createClient<Database>(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,

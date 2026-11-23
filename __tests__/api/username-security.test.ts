@@ -43,11 +43,42 @@ describe("username routes require a session", () => {
     expect(mockCreateClient).not.toHaveBeenCalled()
   })
 
-  it("get: 200 with a session", async () => {
+  it("get: 403 when asking for another user's username", async () => {
     mockProfile.mockResolvedValue({ user_id: "u2" })
+    const res = await getPost(req("/api/username/get", { userId: "u1" }))
+    expect(res.status).toBe(403)
+    expect(mockCreateClient).not.toHaveBeenCalled()
+  })
+
+  it("get: 403 when userId is missing", async () => {
+    mockProfile.mockResolvedValue({ user_id: "u1" })
+    const res = await getPost(req("/api/username/get", {}))
+    expect(res.status).toBe(403)
+    expect(mockCreateClient).not.toHaveBeenCalled()
+  })
+
+  it("get: 200 for the session user's own id (body)", async () => {
+    mockProfile.mockResolvedValue({ user_id: "u1" })
     const res = await getPost(req("/api/username/get", { userId: "u1" }))
     expect(res.status).toBe(200)
     expect((await res.json()).username).toBe("alice")
+  })
+
+  it("get: 200 for the session user's own id (query string)", async () => {
+    mockProfile.mockResolvedValue({ user_id: "u1" })
+    const r = new Request("http://localhost/api/username/get?userId=u1", {
+      method: "POST"
+    })
+    const res = await getPost(r)
+    expect(res.status).toBe(200)
+  })
+
+  it("get: query-string userId for another user is 403", async () => {
+    mockProfile.mockResolvedValue({ user_id: "u2" })
+    const r = new Request("http://localhost/api/username/get?userId=u1", {
+      method: "POST"
+    })
+    expect((await getPost(r)).status).toBe(403)
   })
 
   it("available: 200 with a session", async () => {

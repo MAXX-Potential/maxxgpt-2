@@ -13,6 +13,9 @@ import { createClient } from "@supabase/supabase-js"
 import { NextResponse } from "next/server"
 import OpenAI from "openai"
 
+const UUID_RE =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
 export async function POST(req: Request) {
   try {
     let profile: Awaited<ReturnType<typeof getServerProfile>>
@@ -34,6 +37,20 @@ export async function POST(req: Request) {
     const file = formData.get("file") as File
     const file_id = formData.get("file_id") as string
     const embeddingsProvider = formData.get("embeddingsProvider") as string
+
+    if (typeof file_id !== "string" || !UUID_RE.test(file_id)) {
+      return new Response(
+        JSON.stringify({ message: "Bad Request: file_id must be a valid id" }),
+        { status: 400 }
+      )
+    }
+
+    if (!(file instanceof File)) {
+      return new Response(
+        JSON.stringify({ message: "Bad Request: file is required" }),
+        { status: 400 }
+      )
+    }
 
     const { data: fileRecord, error: fileError } = await supabaseAdmin
       .from("files")

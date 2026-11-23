@@ -5,17 +5,29 @@ import { createClient } from "@supabase/supabase-js"
 export const runtime = "edge"
 
 export async function POST(request: Request) {
-  const json = await request.json()
-  const { userId } = json as {
-    userId: string
-  }
-
   try {
+    let profile
     try {
-      await getServerProfile()
+      profile = await getServerProfile()
     } catch (error) {
       return new Response(JSON.stringify({ message: "Unauthorized" }), {
         status: 401
+      })
+    }
+
+    let body: { userId?: string } = {}
+    try {
+      body = await request.json()
+    } catch (error) {
+      // fall back to the query string below
+    }
+    const userId =
+      body?.userId ?? new URL(request.url).searchParams.get("userId")
+
+    // Self-only: a user may only look up their own username.
+    if (typeof userId !== "string" || userId !== profile.user_id) {
+      return new Response(JSON.stringify({ message: "Forbidden" }), {
+        status: 403
       })
     }
 
