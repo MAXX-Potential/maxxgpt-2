@@ -25,6 +25,13 @@ export async function POST(request: Request) {
       })
     }
 
+    if (!Array.isArray(fileIds) || fileIds.length === 0) {
+      return new Response(
+        JSON.stringify({ message: "Bad Request: fileIds must be a non-empty array" }),
+        { status: 400 }
+      )
+    }
+
     const supabaseAdmin = createClient<Database>(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.SUPABASE_SERVICE_ROLE_KEY!

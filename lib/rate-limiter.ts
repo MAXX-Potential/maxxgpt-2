@@ -11,7 +11,6 @@ class RateLimiter {
   constructor(limit: number = 100, windowMs: number = 60000) {
     this.limit = limit
     this.windowMs = windowMs
-    setInterval(() => this.cleanup(), windowMs)
   }
 
   check(userId: string): { allowed: boolean; remaining: number } {
@@ -32,15 +31,6 @@ class RateLimiter {
 
     entry.count++
     return { allowed: true, remaining: this.limit - entry.count }
-  }
-
-  private cleanup() {
-    const now = Date.now()
-    for (const [userId, entry] of this.requests.entries()) {
-      if (now > entry.resetTime) {
-        this.requests.delete(userId)
-      }
-    }
   }
 }
 
