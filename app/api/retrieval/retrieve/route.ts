@@ -16,12 +16,41 @@ export async function POST(request: Request) {
   const uniqueFileIds = [...new Set(fileIds)]
 
   try {
+    let profile
+    try {
+      profile = await getServerProfile()
+    } catch (error) {
+      return new Response(JSON.stringify({ message: "Unauthorized" }), {
+        status: 401
+      })
+    }
+
     const supabaseAdmin = createClient<Database>(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     )
 
-    const profile = await getServerProfile()
+    const { data: userFiles, error: filesError } = await supabaseAdmin
+      .from("files")
+      .select("id")
+      .eq("user_id", profile.user_id)
+      .in("id", uniqueFileIds)
+
+    if (filesError) {
+      throw filesError
+    }
+
+    const userFileIds = new Set(userFiles?.map(f => f.id) || [])
+    const unauthorizedFiles = uniqueFileIds.filter(id => !userFileIds.has(id))
+
+    if (unauthorizedFiles.length > 0) {
+      return new Response(
+        JSON.stringify({
+          message: "Forbidden: Access denied to one or more files"
+        }),
+        { status: 403 }
+      )
+    }
 
     if (embeddingsProvider === "openai") {
       if (profile.use_azure_openai) {

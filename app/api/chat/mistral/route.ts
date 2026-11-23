@@ -1,4 +1,5 @@
 import { CHAT_SETTING_LIMITS } from "@/lib/chat-setting-limits"
+import { chatRateLimiter } from "@/lib/rate-limiter"
 import { checkApiKey, getServerProfile } from "@/lib/server/server-chat-helpers"
 import { ChatSettings } from "@/types"
 import { OpenAIStream, StreamingTextResponse } from "ai"
@@ -14,7 +15,24 @@ export async function POST(request: Request) {
   }
 
   try {
-    const profile = await getServerProfile()
+    let profile
+    try {
+      profile = await getServerProfile()
+    } catch (error) {
+      return new Response(JSON.stringify({ message: "Unauthorized" }), {
+        status: 401
+      })
+    }
+
+    const rateLimitResult = chatRateLimiter.check(profile.user_id)
+    if (!rateLimitResult.allowed) {
+      return new Response(
+        JSON.stringify({
+          message: "Rate limit exceeded. Please try again later."
+        }),
+        { status: 429 }
+      )
+    }
 
     checkApiKey(profile.mistral_api_key, "Mistral")
 
@@ -24,7 +42,6 @@ export async function POST(request: Request) {
       baseURL: "https://api.mistral.ai/v1"
     })
 
-
     const response = await mistral.chat.completions.create({
       model: chatSettings.model,
       messages,
@@ -33,11 +50,11 @@ export async function POST(request: Request) {
       stream: true
     })
 
-   // Convert the response into a friendly text-stream.
-   const stream = OpenAIStream(response)
+    // Convert the response into a friendly text-stream.
+    const stream = OpenAIStream(response)
 
-   // Respond with the stream
-   return new StreamingTextResponse(stream)
+    // Respond with the stream
+    return new StreamingTextResponse(stream)
   } catch (error: any) {
     let errorMessage = error.message || "An unexpected error occurred"
     const errorCode = error.status || 500

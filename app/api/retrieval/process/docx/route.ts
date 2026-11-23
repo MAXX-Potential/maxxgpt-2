@@ -17,12 +17,38 @@ export async function POST(req: Request) {
   }
 
   try {
+    let profile: Awaited<ReturnType<typeof getServerProfile>>
+    try {
+      profile = await getServerProfile()
+    } catch (error) {
+      return new Response(JSON.stringify({ message: "Unauthorized" }), {
+        status: 401
+      })
+    }
+
     const supabaseAdmin = createClient<Database>(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     )
 
-    const profile = await getServerProfile()
+    const { data: fileRecord, error: fileError } = await supabaseAdmin
+      .from("files")
+      .select("user_id")
+      .eq("id", fileId)
+      .single()
+
+    if (fileError || !fileRecord) {
+      return new Response(JSON.stringify({ message: "File not found" }), {
+        status: 404
+      })
+    }
+
+    if (fileRecord.user_id !== profile.user_id) {
+      return new Response(
+        JSON.stringify({ message: "Forbidden: Access denied to this file" }),
+        { status: 403 }
+      )
+    }
 
     if (embeddingsProvider === "openai") {
       if (profile.use_azure_openai) {

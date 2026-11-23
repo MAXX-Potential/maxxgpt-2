@@ -15,18 +15,44 @@ import OpenAI from "openai"
 
 export async function POST(req: Request) {
   try {
+    let profile: Awaited<ReturnType<typeof getServerProfile>>
+    try {
+      profile = await getServerProfile()
+    } catch (error) {
+      return new Response(JSON.stringify({ message: "Unauthorized" }), {
+        status: 401
+      })
+    }
+
     const supabaseAdmin = createClient<Database>(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     )
-
-    const profile = await getServerProfile()
 
     const formData = await req.formData()
 
     const file = formData.get("file") as File
     const file_id = formData.get("file_id") as string
     const embeddingsProvider = formData.get("embeddingsProvider") as string
+
+    const { data: fileRecord, error: fileError } = await supabaseAdmin
+      .from("files")
+      .select("user_id")
+      .eq("id", file_id)
+      .single()
+
+    if (fileError || !fileRecord) {
+      return new Response(JSON.stringify({ message: "File not found" }), {
+        status: 404
+      })
+    }
+
+    if (fileRecord.user_id !== profile.user_id) {
+      return new Response(
+        JSON.stringify({ message: "Forbidden: Access denied to this file" }),
+        { status: 403 }
+      )
+    }
 
     const fileBuffer = Buffer.from(await file.arrayBuffer())
     const blob = new Blob([fileBuffer])

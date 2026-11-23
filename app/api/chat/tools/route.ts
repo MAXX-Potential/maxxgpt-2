@@ -2,6 +2,7 @@ import {
   extractOpenapiData,
   openapiDataToFunctions
 } from "@/lib/openapi-conversion"
+import { chatRateLimiter } from "@/lib/rate-limiter"
 import { checkApiKey, getServerProfile } from "@/lib/server/server-chat-helpers"
 import { ChatSettings } from "@/types"
 import { OpenAIStream, StreamingTextResponse } from "ai"
@@ -19,10 +20,25 @@ export async function POST(request: Request) {
     toolSchemas: string
   }
 
-  console.log("tools messages", messages, "\n\n\n")
-
   try {
-    const profile = await getServerProfile()
+    let profile
+    try {
+      profile = await getServerProfile()
+    } catch (error) {
+      return new Response(JSON.stringify({ message: "Unauthorized" }), {
+        status: 401
+      })
+    }
+
+    const rateLimitResult = chatRateLimiter.check(profile.user_id)
+    if (!rateLimitResult.allowed) {
+      return new Response(
+        JSON.stringify({
+          message: "Rate limit exceeded. Please try again later."
+        }),
+        { status: 429 }
+      )
+    }
 
     checkApiKey(profile.openai_api_key, "OpenAI")
 
@@ -70,8 +86,6 @@ export async function POST(request: Request) {
     messages.push(message)
     const toolCalls = message.tool_calls || []
 
-    console.log("tools messages 2", messages, "\n\n\n")
-
     if (toolCalls.length > 0) {
       for (const toolCall of toolCalls) {
         const functionCall = toolCall.function
@@ -107,8 +121,6 @@ export async function POST(request: Request) {
         })
       }
     }
-
-    console.log("tools messages 3", messages, "\n\n\n")
 
     const secondResponse = await openai.chat.completions.create({
       model: chatSettings.model as ChatCompletionCreateParamsBase["model"],

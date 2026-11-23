@@ -1,4 +1,5 @@
 import { CHAT_SETTING_LIMITS } from "@/lib/chat-setting-limits"
+import { chatRateLimiter } from "@/lib/rate-limiter"
 import { checkApiKey, getServerProfile } from "@/lib/server/server-chat-helpers"
 import { ChatAPIPayload } from "@/types"
 import { OpenAIStream, StreamingTextResponse } from "ai"
@@ -12,7 +13,24 @@ export async function POST(request: Request) {
   const { chatSettings, messages } = json as ChatAPIPayload
 
   try {
-    const profile = await getServerProfile()
+    let profile
+    try {
+      profile = await getServerProfile()
+    } catch (error) {
+      return new Response(JSON.stringify({ message: "Unauthorized" }), {
+        status: 401
+      })
+    }
+
+    const rateLimitResult = chatRateLimiter.check(profile.user_id)
+    if (!rateLimitResult.allowed) {
+      return new Response(
+        JSON.stringify({
+          message: "Rate limit exceeded. Please try again later."
+        }),
+        { status: 429 }
+      )
+    }
 
     checkApiKey(profile.azure_openai_api_key, "Azure OpenAI")
 

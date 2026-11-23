@@ -1,3 +1,4 @@
+import { chatRateLimiter } from "@/lib/rate-limiter"
 import { checkApiKey, getServerProfile } from "@/lib/server/server-chat-helpers"
 import { ChatSettings } from "@/types"
 import { GoogleGenerativeAI } from "@google/generative-ai"
@@ -12,7 +13,24 @@ export async function POST(request: Request) {
   }
 
   try {
-    const profile = await getServerProfile()
+    let profile
+    try {
+      profile = await getServerProfile()
+    } catch (error) {
+      return new Response(JSON.stringify({ message: "Unauthorized" }), {
+        status: 401
+      })
+    }
+
+    const rateLimitResult = chatRateLimiter.check(profile.user_id)
+    if (!rateLimitResult.allowed) {
+      return new Response(
+        JSON.stringify({
+          message: "Rate limit exceeded. Please try again later."
+        }),
+        { status: 429 }
+      )
+    }
 
     checkApiKey(profile.google_gemini_api_key, "Google")
 
@@ -73,7 +91,7 @@ export async function POST(request: Request) {
       errorMessage =
         "Google Gemini API Key is incorrect. Please fix it in your profile settings."
     }
-    
+
     return new Response(JSON.stringify({ message: errorMessage }), {
       status: errorCode
     })
