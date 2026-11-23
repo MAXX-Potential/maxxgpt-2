@@ -297,7 +297,7 @@ export const Message: FC<MessageProps> = ({
                           setShowFileItemPreview(true)
                         }}
                       >
-                        <div className="bg-maxxblue rounded p-2">
+                        <div className="rounded bg-maxxblue p-2">
                           {(() => {
                             let fileExtension = parentFile?.type.includes("/")
                               ? parentFile.type.split("/")[1]

@@ -88,7 +88,7 @@ export const ModelIcon: FC<ModelIconProps> = ({
     //         width={width}
     //         height={height}
     //     />
-    //   )
+    //   ) 
     case "claude-2.1":
     case "claude-instant-1.2":
     case "claude-3-opus-20240229":
@@ -106,9 +106,9 @@ export const ModelIcon: FC<ModelIconProps> = ({
         />
       )
     case "gemini-pro":
-      // case "gemini-pro-vision":
-      // case "gemini-1.5-flash":
-      // case "gemini-1.5-pro-latest":
+    // case "gemini-pro-vision":
+    // case "gemini-1.5-flash":
+    // case "gemini-1.5-pro-latest":
       return (
         <GoogleSVG
           className={cn(
